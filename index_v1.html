@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Highcharts Example</title>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+</head>
+<body>
+
+<?php
+// 连接 MySQL 数据库
+$servername = "localhost";
+$username = "your_username";
+$password = "your_password";
+$dbname = "your_database";
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// 检查连接是否成功
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// 从数据库中查询数据
+$sql = "SELECT id, humi, temp FROM your_table";
+$result = $conn->query($sql);
+
+// 将数据格式化为 Highcharts 兼容的数组格式
+$data = array();
+while($row = $result->fetch_assoc()) {
+    $id = intval($row["id"]);
+    $humi = intval($row["humi"]);
+    $temp = intval($row["temp"]);
+    $data[] = array($id, $humi, $temp);
+}
+$data = json_encode($data);
+
+// 关闭 MySQL 连接
+$conn->close();
+?>
+
+<!-- 显示 Highcharts 图表 -->
+<div id="container"></div>
+<script>
+  Highcharts.chart('container', {
+    chart: {
+      type: 'line'
+    },
+    title: {
+      text: 'Humidity and Temperature'
+    },
+    xAxis: {
+      title: {
+        text: 'ID'
+      }
+    },
+    yAxis: {
+      title: {
+        text: 'Value'
+      }
+    },
+    series: [{
+      name: 'Humidity',
+      data: <?php echo json_encode(array_column($data, 1)); ?>
+    }, {
+      name: 'Temperature',
+      data: <?php echo json_encode(array_column($data, 2)); ?>
+    }]
+  });
+</script>
+
+</body>
+</html>

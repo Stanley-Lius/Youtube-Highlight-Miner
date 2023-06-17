@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+  <body>
+	 <head>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+		
+		<script>
+			var colors = new Array(
+			  [62,35,255],
+			  [60,255,60],
+			  [255,35,98],
+			  [45,175,230],
+			  [255,0,255],
+			  [255,128,0]);
+
+			var step = 0;
+			//color table indices for: 
+			// current color left
+			// next color left
+			// current color right
+			// next color right
+			var colorIndices = [0,1,2,3];
+
+			//transition speed
+			var gradientSpeed = 0.002;
+
+			function updateGradient()
+			{
+			  
+			  if ( $===undefined ) return;
+			  
+			var c0_0 = colors[colorIndices[0]];
+			var c0_1 = colors[colorIndices[1]];
+			var c1_0 = colors[colorIndices[2]];
+			var c1_1 = colors[colorIndices[3]];
+
+			var istep = 1 - step;
+			var r1 = Math.round(istep * c0_0[0] + step * c0_1[0]);
+			var g1 = Math.round(istep * c0_0[1] + step * c0_1[1]);
+			var b1 = Math.round(istep * c0_0[2] + step * c0_1[2]);
+			var color1 = "rgb("+r1+","+g1+","+b1+")";
+
+			var r2 = Math.round(istep * c1_0[0] + step * c1_1[0]);
+			var g2 = Math.round(istep * c1_0[1] + step * c1_1[1]);
+			var b2 = Math.round(istep * c1_0[2] + step * c1_1[2]);
+			var color2 = "rgb("+r2+","+g2+","+b2+")";
+
+			 $('#gradient').css({
+			   background: "-webkit-gradient(linear, left top, right top, from("+color1+"), to("+color2+"))"}).css({
+				background: "-moz-linear-gradient(left, "+color1+" 0%, "+color2+" 100%)"});
+			  
+			  step += gradientSpeed;
+			  if ( step >= 1 )
+			  {
+				step %= 1;
+				colorIndices[0] = colorIndices[1];
+				colorIndices[2] = colorIndices[3];
+				
+				//pick two new target color indices
+				//do not pick the same as the current one
+				colorIndices[1] = ( colorIndices[1] + Math.floor( 1 + Math.random() * (colors.length - 1))) % colors.length;
+				colorIndices[3] = ( colorIndices[3] + Math.floor( 1 + Math.random() * (colors.length - 1))) % colors.length;
+				
+			  }
+			}
+
+			setInterval(updateGradient,10);
+	</script>
+		
+		<style> 
+		
+			body{
+				background-color: #000000;
+				padding: 0px;
+				margin: 0px;
+			   
+				font-family: Arial, sans-serif;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+				text-align: center;
+			}
+			
+			h1 {
+				margin-bottom: 30px;
+				color: #ffffff;
+				font-size: 36px;
+				text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+			}
+
+			#gradient
+			{
+			  width: 100%;
+			  height: 890px;
+			  padding: 0px;
+			  margin: 0px;
+			}
+			
+			
+		</style>
+	
+		<style>
+
+			@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js);
+			@import url(https://fonts.googleapis.com/css?family=Arvo);
+			/* iconicfill */
+			[class*="iconicfill-"]:before {
+			  font-family: 'IconicFill', sans-serif;
+			}
+			.wrap{width:300px;}
+			.center{
+			 top:15%;
+			 transform:translateY(-100%);
+			 position:relative;
+			 margin:auto;}
+			 
+			input{
+			  display:block;
+				width: 300px;
+				padding: 15px 0 15px 12px;
+				font-family: "Arvo";
+				font-weight: 400;
+				color: #377D6A;
+				background: rgba(0,0,0,0.3);
+				border: none;
+				outline: none;
+				color: #fff;
+				text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+				border: 1px solid rgba(0,0,0,0.3);
+				border-radius: 4px;
+				box-shadow: inset 0 -5px 45px rgba(100,100,100,0.2), 0 1px  1px rgba(255,255,255,0.2);
+				text-indent: 60px;
+				transition: all .3s ease-in-out;
+				position: relative;
+				font-size: 13px;
+			}
+			input:focus{
+				text-indent: 12px;
+				box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgba(255,255,255,0.2);
+			}
+
+			label{
+				display: block;
+				position: static;
+				margin: 0;
+				padding: 0;
+				color:#fff;
+				font-family: 'Arvo';
+				font-size: 16px;
+			}
+
+			.wrap-label{
+			    width: 300px;
+			    height: 34px;
+				position: relative;
+			    padding : 0;
+			    margin: 0;
+			    bottom: -15px;
+			    overflow: hidden;}
+			 
+
+			.iconicfill-pen-alt2{
+				position: absolute;
+				left: 10px;
+				color: #fff;
+				font-size:19px;
+				opacity: 1;
+				top: -2px;
+				transform:translateX(-100px);
+			}
+
+			/* ==== Pen animation ==== */
+			.move-pen{animation: move-pen 1s ease-in infinite alternate;}
+			@keyframes move-pen{
+				from{transform:translateX(-4px) rotate(6deg);}
+				to{transform:translateX(4px) rotate(-3deg);}
+			}
+		</style>
+	
+		<script>
+			 // jquery transit is used to handle the animation
+	   $('input').focusin(function() {
+			$('label').transition({x:'80px'},500,'ease').next()
+			.transition({x:'5px'},500, 'ease');
+	//setTimeout needed for Chrome, for some reson there is no animation from left to right, the pen is immediately present. Slight delay to adding the animation class fixes it
+			 setTimeout(function(){
+			$('label').next().addClass('move-pen');
+			},100);
+		
+		});
+		  
+		  $('input').focusout(function() {
+			  $('label').transition({x:'0px'},500,'ease').next()
+			   .transition({x:'-100px'},500, 'ease').removeClass('move-pen');
+		  });
+		</script>
+	
+		<style>
+			@import "compass/css3";
+
+			$seafoam : rgb(30,205,151);
+			$white : white;
+			$gray : rgb(200,200,200);
+
+			body {
+			  text-align:center;
+			}
+			
+			
+			.center-component {
+			  position: relative;
+			}
+
+			button.colins-submit {
+			  background:transparent;
+			  border:none;
+			  &.is-active {
+				cursor:default;
+			  }
+			  &:focus {
+				outline: none; 
+			  }
+			  &::-moz-focus-inner {
+				border: 0;
+			  }
+			  
+			  //RESTING STATE
+			  svg {
+				text {
+				  font-family: 'Montserrat', sans-serif;
+				  &.textNode {
+					fill:$seafoam;
+				  }
+				  &.checkNode {
+					fill-opacity:0;
+				  }
+				}
+				rect {
+				  &.btn-shape {
+					&.btn-bg {
+					  stroke:$gray;
+					  fill:$white;
+					}
+					&.btn-color {
+					  stroke:$seafoam;
+					  fill:$white;
+					  stroke-dasharray:453;//Magic number :/
+					  stroke-dashoffset:0;
+					}
+				  }
+				}
+			  }
+			}
+
+			p {
+			  font-family: Montserrat, sans-serif;
+			  color: #575757;
+			  font-size: 1rem;
+			  max-width:330px;
+			  a {
+				color:$seafoam;
+				&:hover, &:active{
+				  color:saturate($seafoam, 20%);      
+				}
+				&:visited {
+				  color:desaturate($seafoam, 20%);   
+				}
+			  }
+			}
+		
+		</style>
+	
+
+	
+		<style>
+			.chooser {
+				top: 0%;
+				left:42%;
+				position: relative;
+			}
+		</style>
+	
+	</head>
+	
+	<div id="gradient" />
+	
+	
+	<h1>  Youtube Highlight Miner </h1>
+	
+	<div class="wrap center">
+		<div class="wrap-label">
+			<label for="url">Video URL</label>
+			<p class="iconifill-pen-alt2"><i class="fas fa-pencil-alt"></i></p>
+		</div>
+		<form action="/youtube_chatgpt" method="POST">
+			<input type="text" id="input" name="inputText" placeholder="Enter URL">
+			<div class="center-component">
+			  <button id="but" class="colins-submit">
+				
+				<svg width="196" height="70" 
+					 viewPort="0 0 196 70" version="1.1"
+					 xmlns="http://www.w3.org/2000/svg">
+				  
+				  <rect class="btn-shape btn-bg"
+						x="3" y="3" 
+						width="190" height="64"
+						rx="32" ry="32" 
+						fill="#ffffff"
+						fill-opacity="1"
+						stroke="#ccc" stroke-width="4"
+						/>  
+				  <rect class="btn-shape btn-color"
+						x="3" y="3" 
+						width="190" height="64"
+						rx="32" ry="32" 
+						fill="#ffffff"
+						fill-opacity="0"
+						stroke="rgb(30,205,151)" stroke-width="4"
+						/>
+				  <text class="checkNode" x="96" y="40" 
+						font-family="Montserrat" 
+						font-size="22"
+						fill-opacity="1"
+						text-anchor="middle"
+						fill="rgb(255,255,255)" >
+					✔
+				  </text>
+				  <text class="textNode" x="96" y="40" 
+						transform="scale(1)"
+						font-family="Montserrat" 
+						font-size="16"
+						fill-opacity="1"
+						text-anchor="middle"
+						fill="rgb(30,205,151)" >
+					Submit
+				  </text>
+				</svg>
+			  </button>
+			</div>
+		</form>
+	</div>
+	
+	<a id="loadLink" href="/load">Processing!!!</a>
+		
+		
+		<div class="chooser" style="height:200px;width:300px;">
+			<label id="myLabel" for="highlightChooser"></label>
+			<select id="highlightChooser" name="highlightChooser">
+				<option value="">請選擇</option>
+			</select>
+		</div>
+		
+		<h1>Result: {{result}}</h1>
+		
+		{% if result %}
+			<script>
+				console.log("get result");
+				window.location.replace("HTTP://www.google.com");
+				var label = document.getElementById('myLabel');
+				label.textContent='';
+			</script>
+		{% else %}
+			<script>console.log("error input");</script>
+		{% endif %}
+	
+	
+    <!-- 這是用來放置多個影片的容器 -->
+	<div id="videoContainer" class="iframeContainer"></div>
+
+    <script>
+		 // 獲取下拉式選單元素
+  //var url = document.getElementById('inputurl').value
+  //console.log(url)
+  var videos;
+  var selectElement = document.getElementById('highlightChooser');
+  var clearButton = document.getElementById('but');
+  var label = document.getElementById('myLabel');
+  var inp = document.getElementById('input');
+  var jump = document.getElementById('loadLink');
+
+  
+  clearButton.addEventListener('click', function() {
+	label.textContent = '';
+	window.location.replace("HTTP://www.google.com");
+	});
+	
+   fetch('/youtube_chatgpt/data').then(response => response.json())
+			.then(data => {
+				// 解析 JSON 並存入 JavaScript 陣列
+				var videos = data;
+				videos.forEach(function(value) {
+					if(value[2]>=3600){
+						var time = [Math.floor(value[2]/3600), Math.floor((value[2]%3600)/60), (value[2]%60)%60];
+					}
+					else if(value[2]>=60) {
+						var time = [0, Math.floor(value[2]/60), value[2]%60];
+					}
+					else {
+						var time = [0, 0, value[2]];
+					}
+					console.log(time)
+					var option = document.createElement('option');
+					option.value = value[2];
+					option.textContent = time[0] + 'h' + time[1] + 'm' + time[2] + 's';
+					selectElement.appendChild(option);
+					});
+				
+				label.textContent = 'Success!!!Now you can choose hightlight to watch:';
+				//console.log(videos[0][1])
+				// 1. This code loads the IFrame Player API code asynchronously.
+				var tag = document.createElement('script');
+				tag.src = "https://www.youtube.com/iframe_api";
+				var firstScriptTag = document.getElementsByTagName('script')[0];
+				firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+				selectElement.addEventListener('change', function(event) {
+					var selectedOption = event.target.value;
+					videoContainer.innerHTML = '';
+					var iframe = document.createElement('iframe');
+					if(videos[0][3] == 'youtube') {	
+						
+						// 設定影片的 src 屬性，並指定影片 ID 和起始時間
+						iframe.src = 'https://www.youtube.com/embed/' + videos[0][1]  + '?start=' + selectedOption;
+
+						// 設定其他的屬性和樣式，如高度、寬度等
+						iframe.width = '640';
+						iframe.height = '390';
+						iframe.frameBorder = '0';
+					}
+					else if(videos[0][3] == 'twitch') {
+						iframe.src = 'https://player.twitch.tv/?video=' + videos[0][1]  + '&time=' + selectedOption.textContent;
+						console.log(selectedOption)
+						iframe.width = '640';
+						iframe.height = '390';
+						iframe.allowfullscreen = true;
+					}
+						
+					// 將 <iframe> 元素插入到容器中
+					document.getElementById('videoContainer').appendChild(iframe);
+				});
+					// 2. This function creates an <iframe> (and YouTube player)
+					//    after the API code downloads.
+					// 在控制台輸出陣列值
+					console.log(videos);
+				});
+	</script>
+	
+  </body>
+</html>
