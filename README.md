@@ -3,7 +3,9 @@
 自動分析 YouTube / Twitch 直播聊天室訊息，找出影片精華時刻（Highlight），並透過網頁介面直接觀看。
 
 
-https://github.com/user-attachments/assets/9d5da2d3-6606-42e8-9df1-8d43c681c712
+https://github.com/user-attachments/assets/095393d1-cd11-4dc3-8a1c-a04380c44430
+
+
 
 
 ## 功能簡介
